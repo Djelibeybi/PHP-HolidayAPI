@@ -17,8 +17,11 @@ Class Holiday {
 	// Internal array for the globes
 	private $globes = array();
 	
-	// Internat variable for hostname
+	// Internal variable for hostname
 	private $addr;
+	
+	// Internal URL base for RESTful API
+	private $api_url;
 	
 	/** 
 	 * If remote, we require the remote address. Currently, no checking of the address is
@@ -33,6 +36,7 @@ Class Holiday {
 		}
 
 		$this->addr = $addr;
+		$this->api_url = 'http://'.$addr.'/iotas/0.1/device/moorescloud.holiday/localhost/';
 		
 	}//end function __construct()
 
@@ -96,6 +100,22 @@ Class Holiday {
 
 
 	/**
+	 * The gradient function takes a start colour, end colour and steps count and animates
+	 * a gradient from the start to end in steps/second
+	 */
+	public function gradient($begin, $end, $steps) {
+	
+		if (!is_array($begin) || !is_array($end) || !is_int($steps)) return false;
+		if (count($begin) > 3 || count($end) > 3) return false;
+		
+		$endpoint = $this->api_url.'gradient';
+		$msg = array('begin' => $begin, 'end' => $end, 'steps' => $steps);
+		$msg_json = json_encode($msg);
+		return $this->http_put($endpoint, $msg_json);
+	
+	}//end function gradient()
+
+	/**
 	 * The render function uses the Holiday RESTful API to control the lights
 	 */
 	public function render() {
@@ -106,14 +126,10 @@ Class Holiday {
 		foreach ($this->globes as $globe) {
 			$hol_vals[] = sprintf("#%02X%02X%02X", $globe[0], $globe[1], $globe[2]);
 		}
-		$hol_msg = array('lights' => $hol_vals);
-		$hol_msg_str = json_encode($hol_msg);
-		$response = $this->http_put($endpoint, $hol_msg_str);
-		if (!$response) {
-			return false;
-		} else {
-			return true;
-		}
+		$msg = array('lights' => $hol_vals);
+		$msg_json = json_encode($hol_msg);
+		return $this->http_put($endpoint, $msg_json);
+
 
 	}//end function render()
 	
