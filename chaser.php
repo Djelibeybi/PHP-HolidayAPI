@@ -19,9 +19,9 @@ if ( isset($argv[1]) ) {
 	
 	while ($count < 2) {
 
-		$r = rand(0, 63);
-		$g = rand(0, 63);
-		$b = rand(0, 63);
+		$r = rand(0, 255);
+		$g = rand(0, 255);
+		$b = rand(0, 255);
 		
 		// Now, based on another random value, squash one of these values
 		switch (rand(0,2)) {
