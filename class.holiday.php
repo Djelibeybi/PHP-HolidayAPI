@@ -157,6 +157,7 @@ Class Holiday {
 	
 	}//end function gradient()
 
+
 	/**
 	 * The render function uses the Holiday RESTful API to control the lights
 	 *
@@ -187,7 +188,7 @@ Class Holiday {
 	 * @param string $endpoint The API endpoint to use
 	 * @param string $data The JSON-encoded data to send to the endpoint
 	 *
-	 * @return string Returns the response from the API
+	 * @return string Returns false if the endpoint doesn't respond, true on success or the response from the API
 	 *
 	 */
 	 private function http_put($endpoint, $data) {
@@ -204,7 +205,12 @@ Class Holiday {
 		if (!$response) {
 			return false;
 		} else {
-			return $response;
+			$return = json_decode($response);
+			if ($return->value == 1) {
+				return true;
+			} else {
+				return $return->value;
+			}
 		}
 	
 	}
