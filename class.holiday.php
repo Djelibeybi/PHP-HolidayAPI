@@ -56,13 +56,13 @@ Class Holiday {
 	
 		// Can't set a globe that doesn't exist
 		if ( $globenum < 0 || $globenum > $this->NUM_GLOBES - 1) return false;
-		
+
 		// Can't use values that are not integers
 		if (!is_int($globenum) || !is_int($r) || !is_int($g) || !is_int($b)) return false;
-		
+
 		// Can't set colour values below 0 or greater than 255.
 		if ($r < 0 || $r > 255 || $g < 0 || $g > 255 || $b < 0 || $b > 255) return false;
-		
+
 		$this->globes[$globenum] = array ($r, $g, $b);
 		
 	}//end function setglobe()
@@ -76,9 +76,9 @@ Class Holiday {
 	 *
 	 */
 	public function fill($r, $g, $b) {
-	
+
 		// Can't use values that are not integers
-		if (!is_int($globenum) || !is_int($r) || !is_int($g) || !is_int($b)) return false;
+		if (!is_int($r) || !is_int($g) || !is_int($b)) return false;
 		
 		// Can't set colour values below 0 or greater than 255.
 		if ($r < 0 || $r > 255 || $g < 0 || $g > 255 || $b < 0 || $b > 255) return false;
@@ -176,6 +176,7 @@ Class Holiday {
 		}
 		$msg = array('lights' => $globe_colours);
 		$msg_json = json_encode($msg);
+		echo($msg_json)."\n";
 		return $this->http_put($endpoint, $msg_json);
 
 
@@ -188,7 +189,7 @@ Class Holiday {
 	 * @param string $endpoint The API endpoint to use
 	 * @param string $data The JSON-encoded data to send to the endpoint
 	 *
-	 * @return string Returns false if the endpoint doesn't respond, true on success or the response from the API
+	 * @return string Returns false if the endpoint doesn't respond or the response from the API
 	 *
 	 */
 	 private function http_put($endpoint, $data) {
@@ -205,12 +206,7 @@ Class Holiday {
 		if (!$response) {
 			return false;
 		} else {
-			$return = json_decode($response);
-			if ($return->value == 1) {
-				return true;
-			} else {
-				return $return->value;
-			}
+			return json_decode($response);
 		}
 	
 	}
